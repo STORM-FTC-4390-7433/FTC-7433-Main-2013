@@ -1,6 +1,6 @@
 #ifndef DRIVESYS_H
 #define DRIVESYS_H
-#include "drive.c"
+#include "drive.h"
 
 typedef struct DriveSys {
 	//pointers to motors in the array motor[]
