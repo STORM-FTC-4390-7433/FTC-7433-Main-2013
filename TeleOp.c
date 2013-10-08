@@ -49,7 +49,13 @@ task main()
 
   waitForStart();   // wait for start of tele-op phase
 
+  DriveSys d = {motor[frontLeft], motor[frontRight], motor[backLeft], motor[backRight], NULL, NULL, NULL, NULL};
+  
   while (true){
+  
+    getJoystickSettings(joystick);
+    
+    updateDriveSys(d, joystick.joy1_y1 * (100/128), joystick.joy1_y2 * (100/128));
   
   }
 }
