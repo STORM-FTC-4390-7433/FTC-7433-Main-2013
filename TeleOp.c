@@ -11,10 +11,10 @@
 #include "JoystickDriver.c"  //Include file to "handle" the Bluetooth messages.
 #include "drive.h"
 #include "drive.c"
-#include "conv.h"
-#include "conv.c"
-#include "hang.h"
-#include "hang.c"
+#include "conveyor.h"
+#include "conveyor.c"
+//#include "hang.h"
+//#include "hang.c"
 
 DriveSys drive;
 ConvSys conv;
@@ -25,7 +25,7 @@ void initializeRobot()
 	drive.frontRight = frontRight;
 	drive.backLeft = backLeft;
 	drive.backRight = backRight;
-	
+
 	conv.driveMotor = conveyorDrive;
 	return;
 }
@@ -37,12 +37,12 @@ task main(){
 	#ifdef COMPETITION
 	waitForStart();   // wait for start of tele-op phase
 	#endif
-	
+
 	while (true){
 		getJoystickSettings(joystick);
-		
+
 		updateDriveSys(drive, joystick.joy1_y1 * (100.0/128.0), joystick.joy1_y2 * (100.0/128.0));
-		
+
 		updateConvSys(conv, joystick.joy2_y1 * (100.0/128.0));
 	}
 }
