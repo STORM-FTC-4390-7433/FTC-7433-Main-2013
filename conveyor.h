@@ -3,7 +3,8 @@
 
 typedef struct{
 	//pointers to motors in the array motor[]
-	tMotor driveMotor;
+	tMotor driveMotor,
+			turnMotor;
 }ConvSys;
 
 #endif
