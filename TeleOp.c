@@ -16,11 +16,12 @@
 #include "drive.c"
 #include "conveyor.h"
 #include "conveyor.c"
-//#include "hang.h"
-//#include "hang.c"
+#include "hang.h"
+#include "hang.c"
 
 DriveSys drive;
 ConvSys conv;
+HangSys hang;
 
 void initializeRobot()
 {
@@ -31,6 +32,8 @@ void initializeRobot()
 
 	conv.driveMotor = conveyorDrive;
 	conv.turnMotor = conveyorTurn;
+	
+	
 	return;
 }
 
