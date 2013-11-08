@@ -5,4 +5,4 @@ typedef struct{
 	tMotor leftRaise,
 			rightRaise;
 }HangSys;
-#endifi
+#endif

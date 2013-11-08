@@ -2,10 +2,8 @@
 #define DRIVESYS_C
 
 void updateDriveSys (DriveSys t, int leftMotorPower, int rightMotorPower){
-	motor[t.frontLeft] = leftMotorPower;
-	motor[t.backLeft] = leftMotorPower;
-	motor[t.frontRight] = rightMotorPower;
-	motor[t.backRight] = rightMotorPower;
+	motor[t.Left] = leftMotorPower;
+	motor[t.Right] = rightMotorPower;
 	return;
 }
 
