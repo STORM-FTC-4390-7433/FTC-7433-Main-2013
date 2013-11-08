@@ -40,6 +40,7 @@ void initializeRobot()
 
 	gyr.gyroscope = HiTeGyro;
 	initGyroSys(gyr, 1000);
+	gyr.readFreq = 10;
 	StartTask(findHeading);
 	return;
 }
@@ -56,9 +57,14 @@ task main(){
 		//getJoystickSettings(joystick);
 
 		updateGyroSys(gyr);
-		if(gyr.currentHeading == 0.0){
-			writeDebugStreamLine("%f", gyr.rotationsHeading);
-		}
+		//if(gyr.currentHeading == 0.0){
+		//if(gyr.iterations % 200 == 0){
+		//	writeDebugStreamLine("%f", gyr.dTOffset);
+		//}
+		//if(abs((int)gyr.rotationsHeading) % 15 == 0){
+			nxtDisplayString(0,"%d", gyr.rotationsHeading);
+			nxtDisplayString(1,"%d", sensorValue[gyr.gyroscope]);
+		//}
 		updateDriveSys(drive, joystick.joy1_y1 * (100.0/128.0), joystick.joy1_y2 * (100.0/128.0));
 
 		updateConvSys(conv, joystick.joy2_y1 * (100.0/128.0), joystick.joy2_y2 * (100.0/128.0));
