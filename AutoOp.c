@@ -27,6 +27,9 @@ DriveSys drive;
 ConvSys conv;
 HangSys hang;
 
+void turnToAngle(DriveSys t, gyroSys g, float relHeading);
+void driveToEncodeVal(DriveSys t, long targetVal);
+
 void initializeRobot()
 {
 	drive.Left = driveLeft;
@@ -58,17 +61,29 @@ task main(){
 	compassOffset = SensorValue[HiTeCompass];
 	writeDebugStreamLine("compass %f", compassOffset);
 
-	while (true){
-		getJoystickSettings(joystick);
 
-		updateGyroSys(gyr);
+}
 
-		nxtDisplayString(0,"%f", gyr.currentHeading);
-		nxtDisplayString(1,"%f", compassNorm(HiTeCompass, compassOffset));
-		nxtDisplayString(3, "%f", abs(compassNorm(HiTeCompass, compassOffset) - gyr.currentHeading) <= 180 ? compassNorm(HiTeCompass, compassOffset) - gyr.currentHeading : 360 - (compassNorm(HiTeCompass, compassOffset) - gyr.currentHeading) );
-
-		updateDriveSys(drive, joystick.joy1_y1 * (100.0/128.0), joystick.joy1_y2 * (100.0/128.0));
-
-		updateConvSys(conv, joystick.joy2_y1 * (100.0/128.0), joystick.joy2_y2 * (100.0/128.0));
+void turnToAngle(DriveSys t, gyroSys g, float relHeading, int turnRate){
+	float targetHeading = gyr.rotationsHeading + relHeading;
+	if(relHeading < 0){
+		motor[t.Right] = turnRate;
+		motor[t.Left] = - turnRate;
+		while(gyr.rotationsHeading > targetHeading);
+		motor[t.Right] = 0;
+		motor[t.Left] = 0;
+	} else if (relHeading > 0){
+		motor[t.Right] = - turnRate;
+		motor[t.Left] =  turnRate;
+		while(gyr.rotationsHeading < targetHeading);
+		motor[t.Right] = 0;
+		motor[t.Left] = 0;
+	} else {
+		return;
 	}
+	return;
+}
+
+void driveToEncodeVal(DriveSys t, long targetVal){
+
 }
