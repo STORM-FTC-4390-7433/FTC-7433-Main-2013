@@ -1,5 +1,6 @@
 #pragma config(Hubs,  S1, HTMotor,  HTMotor,  HTMotor,  none)
 #pragma config(Sensor, S2,     HiTeGyro,       sensorI2CHiTechnicGyro)
+#pragma config(Sensor, S3,     HiTeCompass,    sensorI2CHiTechnicCompass)
 #pragma config(Motor,  motorA,           ,             tmotorNXT, openLoop)
 #pragma config(Motor,  motorB,           ,             tmotorNXT, openLoop)
 #pragma config(Motor,  motorC,           ,             tmotorNXT, openLoop)
@@ -22,10 +23,12 @@
 gyroSys gyr;
 #include "gyro.c"
 
+float compassNorm(tSensors comp, float compOff);
+void turnToHeading(HangSys t, GyroSys g, float targetHeading);
+
 DriveSys drive;
 ConvSys conv;
 HangSys hang;
-
 
 void initializeRobot()
 {
@@ -40,8 +43,9 @@ void initializeRobot()
 
 	gyr.gyroscope = HiTeGyro;
 	initGyroSys(gyr, 1000);
-	gyr.readFreq = 10;
-	StartTask(findHeading);
+	gyr.readFreq = 1;
+	StartTask(findHeading, 10);
+	wait1Msec(1000);
 	return;
 }
 
@@ -53,20 +57,32 @@ task main(){
 	waitForStart();   // wait for start of tele-op phase
 	#endif
 
+	float compassOffset;
+	compassOffset = SensorValue[HiTeCompass];
+	writeDebugStreamLine("compass %f", compassOffset);
+
 	while (true){
-		//getJoystickSettings(joystick);
+		getJoystickSettings(joystick);
 
 		updateGyroSys(gyr);
-		//if(gyr.currentHeading == 0.0){
-		//if(gyr.iterations % 200 == 0){
-		//	writeDebugStreamLine("%f", gyr.dTOffset);
-		//}
-		//if(abs((int)gyr.rotationsHeading) % 15 == 0){
-			nxtDisplayString(0,"%d", gyr.rotationsHeading);
-			nxtDisplayString(1,"%d", sensorValue[gyr.gyroscope]);
-		//}
+
+		nxtDisplayString(0,"%f", gyr.currentHeading);
+		nxtDisplayString(1,"%f", compassNorm(HiTeCompass, compassOffset));
+		nxtDisplayString(3, "%f", abs(compassNorm(HiTeCompass, compassOffset) - gyr.currentHeading) <= 180 ? compassNorm(HiTeCompass, compassOffset) - gyr.currentHeading : 360 - (compassNorm(HiTeCompass, compassOffset) - gyr.currentHeading) );
+
 		updateDriveSys(drive, joystick.joy1_y1 * (100.0/128.0), joystick.joy1_y2 * (100.0/128.0));
 
 		updateConvSys(conv, joystick.joy2_y1 * (100.0/128.0), joystick.joy2_y2 * (100.0/128.0));
+	}
+}
+
+float compassNorm(tSensors comp, float compOff){
+	float temp = SensorValue[comp] - compOff;
+	if(temp < 0.0){
+		return (360.0 + temp);
+	} else if (temp >= 360.0){
+		return ((int)temp % 360);
+	} else {
+		return (temp);
 	}
 }

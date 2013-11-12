@@ -2,9 +2,9 @@
 #define GYRO_C
 
 void updateGyroSys(gyroSys t){
-		//t.dTOffset = ((float)(nSysTime - t.startTime) / (float)t.iterations) - t.readFreq;
-		nxtDisplayString(2, "%f", (float)(nSysTime - t.startTime) / (float)t.iterations);
-		t.dTOffset = 0;
+		t.dTOffset = ((float)(nSysTime - t.startTime) / (float)t.iterations) - t.readFreq;
+		//writeDebugStreamLine("%f",((float)(nSysTime - t.startTime) / (float)t.iterations) - t.readFreq);
+		//t.dTOffset = 0;
 }
 
 void initGyroSys(gyroSys t, int initPeriod){
@@ -28,12 +28,12 @@ task findHeading(){
 
 	gyr.startTime = nSysTime;
 
-	float actualGyro = SensorValue[gyr.gyroscope] - gyr.inOffset;
 	while(true){
-			//if( abs(actualGyro) > 1){
-				gyr.rotationsHeading =  ((gyr.rotationsHeading + (actualGyro * ((gyr.readFreq - gyr.dTOffset)/1000.0))));
+			float actualGyro = SensorValue[gyr.gyroscope] - gyr.inOffset;
+			if( abs(actualGyro) > 1){
+				gyr.rotationsHeading =  gyr.rotationsHeading + (actualGyro * (((float)gyr.readFreq - gyr.dTOffset)/1000.0));
 				gyr.currentHeading = ((int)(gyr.rotationsHeading % 360) + 360) % 360;
-		//	}
+			}
 			gyr.iterations++;
 			wait1Msec(gyr.readFreq);
 	}
