@@ -24,7 +24,6 @@ gyroSys gyr;
 #include "gyro.c"
 
 float compassNorm(tSensors comp, float compOff);
-void turnToHeading(HangSys t, GyroSys g, float targetHeading);
 
 DriveSys drive;
 ConvSys conv;
