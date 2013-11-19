@@ -6,3 +6,6 @@ void updateHangSys (HangSys t, int motorPower){
 	return;
 }
 #endif
+//This code makes the arm go up and down.
+//by:Justin
+//also gives the power to the motors Lines(4,5)  
