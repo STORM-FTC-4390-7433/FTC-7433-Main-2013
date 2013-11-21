@@ -36,16 +36,4 @@ void updateHangSys (HangSys t, int motorPower, bool upButton, bool downButton){
 		return;
 	}
 }
-<<<<<<< HEAD
-<<<<<<< HEAD
 #endif
-//This code makes the arm go up and down.
-//by:Justin
-//also gives the power to the motors Lines(4,5)  
-
-=======
-#endif
->>>>>>> parent of ab77958... fixing git
-=======
-#endif
->>>>>>> parent of ab77958... fixing git
