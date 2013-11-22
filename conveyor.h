@@ -4,8 +4,9 @@
 typedef struct{
 	//pointers to motors in the array motor[]
 	tMotor driveMotor,
-			turnMotor;
-		unsigned long long iterations;
+			turnMotor1,
+			turnMotor2;
+		unsigned long iterations;
 }ConvSys;
 
 #endif

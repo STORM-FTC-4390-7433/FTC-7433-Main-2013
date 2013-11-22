@@ -13,9 +13,9 @@ typedef struct{
 	float rotationsHeading;
 
 	//frequency in milliseconds to read a value from the sensor
-	long int readFreq;
+	long readFreq;
 	//number of completed iterations through the "findHeading" task
-	long int iterations;
+	long iterations;
 	//start time of the "findHeading" task, this value is used to find the
 	//most accurate value for dT when determining currentHeading
 	long startTime;
