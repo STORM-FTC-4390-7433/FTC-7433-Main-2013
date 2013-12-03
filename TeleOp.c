@@ -67,10 +67,6 @@ task main(){
 	waitForStart();   // wait for start of tele-op phase
 	#endif
 
-//	updateConvSys(conv, 100, 100);
-	//	wait1Msec(500);
-//	updateConvSys(conv, 0, 0);
-
 	//float compassOffset;
 	//compassOffset = SensorValue[HiTeCompass];
 	//writeDebugStreamLine("compass %f", compassOffset);
@@ -79,9 +75,7 @@ task main(){
 		getJoystickSettings(joystick);
 
 		updateGyroSys(gyr);
-		//nxtDisplayString(0,"%f", gyr.currentHeading);
-		//nxtDisplayString(1,"%f", compassNorm(HiTeCompass, compassOffset));
-		//nxtDisplayString(3, "%f", abs(compassNorm(HiTeCompass, compassOffset) - gyr.currentHeading) <= 180 ? compassNorm(HiTeCompass, compassOffset) - gyr.currentHeading : 360 - (compassNorm(HiTeCompass, compassOffset) - gyr.currentHeading) );
+
 		updateDriveSys(drive, joystick.joy1_y1 * (100.0/128.0), joystick.joy1_y2 * (100.0/128.0));
 		updateConvSys(conv, joystick.joy2_y1 * (100.0/128.0 * 1.5), joystick.joy2_y2 * (100.0/(128.0 * 1.5)));
 		updateHangSys(hang, 100, joy2Btn(4), joy2Btn(2));
