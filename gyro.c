@@ -25,15 +25,17 @@ void initGyroSys(gyroSys t, int initPeriod){
 task findHeading(){
 	//because robotc does not support parameters being passed to functions the gyroSys variable MUST be named "gyr"
 	gyr.iterations = 0;
-
+	writeDebugStreamLine("findHeading running nominally %d", 1000);
 	gyr.startTime = nSysTime;
 
 	while(true){
 			float actualGyro = SensorValue[gyr.gyroscope] - gyr.inOffset;
+			writeDebugStreamLine("%f", actualGyro);
 			if( abs(actualGyro) > 1){
 				gyr.rotationsHeading =  gyr.rotationsHeading + (actualGyro * (((float)gyr.readFreq - gyr.dTOffset)/1000.0));
 				gyr.currentHeading = ((int)(gyr.rotationsHeading % 360) + 360) % 360;
-			}
+				writeDebugStreamLine("%d", gyr.rotationsHeading);
+				}
 			gyr.iterations++;
 			wait1Msec(gyr.readFreq);
 	}

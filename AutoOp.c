@@ -1,4 +1,5 @@
 #pragma config(Hubs,  S1, HTMotor,  HTMotor,  HTMotor,  HTMotor)
+#pragma config(Sensor, S1,     ,               sensorI2CMuxController)
 #pragma config(Sensor, S2,     HiTeGyro,       sensorI2CHiTechnicGyro)
 #pragma config(Sensor, S3,     HiTeIR,         sensorHiTechnicIRSeeker1200)
 #pragma config(Motor,  motorA,           ,             tmotorNXT, openLoop)
@@ -40,8 +41,9 @@ void initializeRobot()
 	drive.Left = leftDrive;
 	drive.Right = rightDrive;
 
-	//conv.driveMotor = conveyorDrive;
-	//conv.turnMotor = conveyorTurn;
+	conv.driveMotor = conveyorDrive;
+	conv.turnMotor1 = conveyorTurn1;
+	conv.turnMotor2 = conveyorTurn2;
 
 	gyr.gyroscope = HiTeGyro;
 	initGyroSys(gyr, 1000);
@@ -54,13 +56,17 @@ void initializeRobot()
 task main(){
 
 	initializeRobot();
-	/*PlayTone(3500, 500);
+	PlayTone(3500, 500);
 	while(bSoundActive);
 
+
+	turnToAngle(drive, gyr, 90, 40);
+	return;
+
 	bool isDone = false;
-	*/
+
 	bool rightPath;
-	/*
+
 	while(!isDone){
 		if(nNxtButtonPressed == 1){
 			rightPath = true;
@@ -84,42 +90,41 @@ task main(){
 	//float compassOffset;
 	//compassOffset = SensorValue[HiTeCompass];
 	//writeDebugStreamLine("compass %f", compassOffset);
-	*/
-	driveToEncodeVal(drive, 10000, 50);
-	return;
+
+	//driveToEncodeVal(drive, 10000, 50);
 
 	if(rightPath){
-		driveToEncodeVal(drive, 100, 50); //get to end of scoring area
-		turnToAngle(drive, gyr, 45.0, 25); //turn parallel to scoring area
+		driveToEncodeVal(drive, 200, 50); //get to end of scoring area
+		turnToAngle(drive, gyr, -60.0, 25); //turn parallel to scoring area
 		driveToEncodeVal(drive, 10, 50); //drive to first bin
 		placeBlockOnIr(drive, gyr, conv, true, HiTeIR);
 		driveToEncodeVal(drive, 10, 50); //drive to second bin
 		placeBlockOnIr(drive, gyr, conv, true, HiTeIR);
-		driveToEncodeVal(drive, 10, 50); //drive to third bin
+		driveToEncodeVal(drive, 20, 50); //drive to third bin
 		placeBlockOnIr(drive, gyr, conv, true, HiTeIR);
 		driveToEncodeVal(drive, 10, 50); //drive to fourth bin
 		placeBlockOnIr(drive, gyr, conv, true, HiTeIR);
 		driveToEncodeVal(drive, 40, 50); //drive clear of scoring area
-		turnToAngle(drive, gyr, 45.0, 25); //turn perpendicular to scoring area
+		turnToAngle(drive, gyr, 90, 25); //turn perpendicular to scoring area
 		driveToEncodeVal(drive, 40, 50); //drive to spot clear on ramp
 		turnToAngle(drive, gyr, 90, 25); //turn towards ramp
 		driveToEncodeVal(drive, 40, 50); //drive up ramp
 	} else {
-		driveToEncodeVal(drive, 100, 50); //get to end of scoring area
-		turnToAngle(drive, gyr, 45.0, 25); //turn parallel to scoring area AND BACKWARDS
-		driveToEncodeVal(drive, -10, 50); //drive to first bin
+		driveToEncodeVal(drive, 200, 50); //get to end of scoring area
+		turnToAngle(drive, gyr, 60.0, 25); //turn parallel to scoring area AND BACKWARDS
+		driveToEncodeVal(drive, -10, -50); //drive to first bin
 		placeBlockOnIr(drive, gyr, conv, false, HiTeIR);
-		driveToEncodeVal(drive, -10, 50); //drive to second bin
+		driveToEncodeVal(drive, -10, -50); //drive to second bin
 		placeBlockOnIr(drive, gyr, conv, false, HiTeIR);
-		driveToEncodeVal(drive, -10, 50); //drive to third bin
+		driveToEncodeVal(drive, -10, -50); //drive to third bin
 		placeBlockOnIr(drive, gyr, conv, false, HiTeIR);
-		driveToEncodeVal(drive, -10, 50); //drive to fourth bin
+		driveToEncodeVal(drive, -10, -50); //drive to fourth bin
 		placeBlockOnIr(drive, gyr, conv, false, HiTeIR);
-		driveToEncodeVal(drive, -40, 50); //drive clear of scoring area
-		turnToAngle(drive, gyr, 45.0, 25); //turn perpendicular to scoring area
-		driveToEncodeVal(drive, -40, 50); //drive to spot clear on ramp
-		turnToAngle(drive, gyr, 90, 25); //turn towards ramp
-		driveToEncodeVal(drive, -40, 50); //drive up ramp
+		driveToEncodeVal(drive, -40, -50); //drive clear of scoring area
+		turnToAngle(drive, gyr, -90.0, 25); //turn perpendicular to scoring area
+		driveToEncodeVal(drive, -40, -50); //drive to spot clear on ramp
+		turnToAngle(drive, gyr, -90, 25); //turn towards ramp
+		driveToEncodeVal(drive, -40, -50); //drive up ramp
 	}
 }
 
@@ -134,7 +139,9 @@ void turnToAngle(DriveSys t, gyroSys g, float relHeading, int turnRate){
 	} else if (relHeading > 0){
 		motor[t.Right] = - turnRate;
 		motor[t.Left] =  turnRate;
-		while(gyr.rotationsHeading < targetHeading);
+		while(gyr.rotationsHeading < targetHeading){
+			//writeDebugStreamLine("%d", SensorValue[HiTeGyro] - gyr.inOffset);
+		}
 		motor[t.Right] = 0;
 		motor[t.Left] = 0;
 	} else {
@@ -144,13 +151,12 @@ void turnToAngle(DriveSys t, gyroSys g, float relHeading, int turnRate){
 }
 
 void driveToEncodeVal(DriveSys t, long targetVal, int motorPower){
-	nMotorEncoder[t.Right] = 0;
-	nMotorEncoderTarget[t.Right] = targetVal;
+	long long int initVal = t.rightEncoder;
 	motor[t.Right] = motorPower;
 	motor[t.Left] = motorPower;
 
-	while(abs(nMotorEncoder[t.Right]) < abs(targetVal)){
-		writeDebugStreamLine("%d", nMotorEncoder[t.Right]);
+	while(abs(t.rightEncoder) < abs(initVal + targetVal)){
+		writeDebugStreamLine("%d", t.rightEncoder);
 	};
 
 	motor[t.Right] = 0;
@@ -163,14 +169,14 @@ void placeBlockOnIr(DriveSys t, gyroSys g, ConvSys s, bool isRightPath, tSensors
 	if(isRightPath){
 		if(HTIRS2readDCDir(IR) == 5){
 			turnToAngle(t, g, 90.0, 50);
-			updateConvSys(s, 0, 100);
+			//updateConvSys(s, 0, 100);
 			turnToAngle(t, g, -90.0, 50);
 		}
 	} else {
 		if(HTIRS2readDCDir(IR) == 5){
-			turnToAngle(t, g, 90.0, 50);
-			//conveyor stuff, likely on a timer or encoder
 			turnToAngle(t, g, -90.0, 50);
+			//conveyor system
+			turnToAngle(t, g, 90.0, 50);
 		}
 	}
 }
