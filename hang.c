@@ -30,7 +30,6 @@ void updateHangSys (HangSys t, int motorPower, bool leftIndUp, bool leftIndDown,
 				motor[t.leftRaise] = - motorPower;
 			} else {
 				motor[t.leftRaise] = 0;
-				return;
 			}
 			if(rightIndUp){
 				motor[t.rightRaise] = motorPower;
