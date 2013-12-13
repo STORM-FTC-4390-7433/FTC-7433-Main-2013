@@ -10,5 +10,11 @@ typedef struct{
 	int targetMoveTime;
 	//direction of current travel 1 = up, -1 = down, 0 = stationary
  int direction;
+
+ //true if autoHangerDeploy() is executing
+ bool autoActive;
+ //time for the autoHangerDeploy to run in ms
+ long int autoTargetTime;
+
 }HangSys;
 #endif

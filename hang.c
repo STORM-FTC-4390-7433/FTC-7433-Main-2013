@@ -1,39 +1,45 @@
 #ifndef HANGSYS_C
 #define HANGSYS_C
-void updateHangSys (HangSys t, int motorPower, bool upButton, bool downButton){
-	/*if(t.direction != 0){
-		if(nSysTime - t.moveStartTime >= t.targetMoveTime ){
-			t.direction = 0;
-			motor[t.leftRaise] = 0;
-			motor[t.rightRaise] = 0;
+
+task autoHangerDeploy(){
+	hang.autoActive = true;
+
+	motor[hang.leftRaise] = 100;
+	motor[hang.rightRaise] = 100;
+	long long int startTime = nSysTime;
+	while(nSysTime - startTime > hang.autoTargetTime){
+		if(joy2Btn(1)){
+			break;
 		}
 	}
-	if(t.direction == 0){
-		if(upButton ^ downButton){
-			if(upButton){
-				t.moveStartTime = nSysTime;
-				t.direction = 1;
+
+	motor[hang.leftRaise] = 0;
+	motor[hang.rightRaise] = 0;
+
+	hang.autoActive = false;
+}
+
+void updateHangSys (HangSys t, int motorPower, bool leftIndUp, bool leftIndDown, bool rightIndUp, bool rightIndDown, bool autoStart){
+	if(!t.autoActive){
+		if((!leftIndUp && !leftIndDown && !rightIndUp && !rightIndDown) && autoStart){
+			StartTask(autoHangerDeploy, 7);
+		} else {
+			if(leftIndUp){
 				motor[t.leftRaise] = motorPower;
-				motor[t.rightRaise] = motorPower;
-			} else {
-				t.moveStartTime = nSysTime;
-				t.direction = -1;
+			} else if (leftIndDown){
 				motor[t.leftRaise] = - motorPower;
-				motor[t.rightRaise] = - motorPower;
+			} else {
+				motor[t.leftRaise] = 0;
+				return;
+			}
+			if(rightIndUp){
+				motor[t.rightRaise] = motorPower;
+			}	else if(rightIndDown){
+				motor[t.rightRaise] = -motorPower;
+			} else {
+				motor[t.rightRaise] = 0;
 			}
 		}
-	}
-	return; */
-		if(upButton){
-		motor[t.rightRaise] = motorPower;
-		motor[t.leftRaise] = motorPower;
-	} else if (downButton){
-		motor[t.rightRaise] = - motorPower;
-		motor[t.leftRaise] = - motorPower;
-	} else {
-		motor[t.rightRaise] = 0;
-		motor[t.leftRaise] = 0;
-		return;
 	}
 }
 #endif
