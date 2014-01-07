@@ -30,11 +30,11 @@ task findHeading(){
 
 	while(true){
 			float actualGyro = SensorValue[gyr.gyroscope] - gyr.inOffset;
-			writeDebugStreamLine("%f", actualGyro);
+			//writeDebugStreamLine("%f", actualGyro);
 			if( abs(actualGyro) > 1){
 				gyr.rotationsHeading =  gyr.rotationsHeading + (actualGyro * (((float)gyr.readFreq - gyr.dTOffset)/1000.0));
 				gyr.currentHeading = ((int)(gyr.rotationsHeading % 360) + 360) % 360;
-				writeDebugStreamLine("%d", gyr.rotationsHeading);
+				//writeDebugStreamLine("%d", gyr.rotationsHeading);
 				}
 			gyr.iterations++;
 			wait1Msec(gyr.readFreq);

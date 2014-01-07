@@ -47,7 +47,7 @@ void initializeRobot(){
 	hang.leftRaise = hangLeft;
 	hang.rightRaise = hangRight;
 	hang.autoActive = false;
-	hang.autoTargetTime = 15000;
+	hang.autoTargetTime = 40000;
 
 	flag.drive = flagDrive;
 
