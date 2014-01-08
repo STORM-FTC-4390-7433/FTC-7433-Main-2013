@@ -30,8 +30,6 @@ gyroSys gyr;
 #include "flag.h"
 #include "flag.c"
 
-float compassNorm(tSensors comp, float compOff);
-
 DriveSys drive;
 ConvSys conv;
 FlagSys flag;
@@ -81,16 +79,5 @@ task main(){
 		updateConvSys(conv, joystick.joy2_y1 * (100.0/128.0 * 1.5), joystick.joy2_y2 * (100.0/(128.0 * 1.5)));
 		updateHangSys(hang, 100, joy2Btn(5), joy2Btn(7), joy2Btn(6), joy2Btn(8), joy2Btn(3));
 		updateFlagSys(flag, 100, joystick.joy2_TopHat);
-	}
-}
-
-float compassNorm(tSensors comp, float compOff){
-	float temp = SensorValue[comp] - compOff;
-	if(temp < 0.0){
-		return (360.0 + temp);
-	} else if (temp >= 360.0){
-		return ((int)temp % 360);
-	} else {
-		return (temp);
 	}
 }
