@@ -74,8 +74,19 @@ task main(){
 		getJoystickSettings(joystick);
 
 		updateGyroSys(gyr);
-
-		updateDriveSys(drive, joystick.joy1_y1 * (100.0/128.0), joystick.joy1_y2 * (100.0/128.0));
+		nxtDisplayCenteredTextLine(0, "Enc: %d", nMotorEncoder[drive.Right]);
+		nxtDisplayCenteredTextLine(1, "gyr: %d", gyr.rotationsHeading);
+		if(joystick.joy1_TopHat == 1){
+			nMotorEncoder[drive.Right] = 0;
+			gyr.rotationsHeading = 0;
+		}
+		if(joy1Btn(10)){
+			updateDriveSys(drive, joystick.joy1_y1 * (100.0/128.0), joystick.joy1_y1 * (100.0/128.0));
+		} else if(joy1Btn(9)){
+			updateDriveSys(drive, -joystick.joy1_y1 * (100.0/128.0), joystick.joy1_y1 * (100.0/128.0));
+		} else {
+			updateDriveSys(drive, joystick.joy1_y1 * (100.0/128.0), joystick.joy1_y2 * (100.0/128.0));
+		}
 		updateConvSys(conv, joystick.joy2_y1 * (100.0/128.0 * 1.5), joystick.joy2_y2 * (100.0/(128.0 * 1.5)));
 		updateHangSys(hang, 100, joy2Btn(5), joy2Btn(7), joy2Btn(6), joy2Btn(8), joy2Btn(3));
 		updateFlagSys(flag, 100, joystick.joy2_TopHat);

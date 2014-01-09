@@ -9,7 +9,7 @@
 #pragma config(Motor,  mtr_S1_C1_2,     conveyorDrive, tmotorTetrix, openLoop)
 #pragma config(Motor,  mtr_S1_C2_1,     conveyorTurn2, tmotorTetrix, openLoop, reversed)
 #pragma config(Motor,  mtr_S1_C2_2,     conveyorTurn1, tmotorTetrix, openLoop)
-#pragma config(Motor,  mtr_S1_C3_1,     rightDrive,    tmotorTetrix, PIDControl, reversed, encoder)
+#pragma config(Motor,  mtr_S1_C3_1,     rightDrive,    tmotorTetrix, openLoop, reversed, encoder)
 #pragma config(Motor,  mtr_S1_C3_2,     leftDrive,     tmotorTetrix, openLoop)
 #pragma config(Motor,  mtr_S1_C4_1,     hangRight,     tmotorTetrix, openLoop)
 #pragma config(Motor,  mtr_S1_C4_2,     flagDrive,     tmotorTetrix, openLoop)
@@ -51,15 +51,23 @@ void initializeRobot()
 }
 
 task main(){
+	driveToEncodeVal(drive, 1000, 100, 100);
+	writeDebugStreamLine("yolo");
+	return;
 	writeDebugStreamLine("started");
 	initializeRobot();
-	driveToEncodeVal(drive, 1000, 30, 50);
 	writeDebugStreamLine("started 2");
 	#ifdef COMPETITION
 	waitForStart();   // wait for start of auto-op phase
 	#endif
 	//turnToAngle(drive, gyr, 360, 50);
-
+		writeDebugStreamLine("started 20");
+	driveToEncodeVal(drive, 2185, 100, 100);
+		writeDebugStreamLine("started 21");
+	turnToAngle(drive, gyr, 45, 100);
+		writeDebugStreamLine("started 22");
+	driveToEncodeVal(drive, -364, 100, 100);
+		writeDebugStreamLine("started 23");
 	writeDebugStreamLine("started 10");
 	if(HTIRS2readDCDir(HiTeIR) == 5){
 		turnToAngle(drive, gyr, -90, 50);
@@ -67,7 +75,7 @@ task main(){
 		turnToAngle(drive, gyr, 90, 50);
 	}
 
-	driveToEncodeVal(drive, 1500, 32, 50);
+	driveToEncodeVal(drive, 1179, 100, 100);
 
 	writeDebugStreamLine("started 11");
 	if(HTIRS2readDCDir(HiTeIR) == 5){
@@ -76,7 +84,7 @@ task main(){
 		turnToAngle(drive, gyr, 90, 50);
 	}
 
-		driveToEncodeVal(drive, 3000, 32, 50);
+		driveToEncodeVal(drive, 3408, 100, 100);
 	writeDebugStreamLine("started 12");
 	if(HTIRS2readDCDir(HiTeIR) == 5){
 		turnToAngle(drive, gyr, -90, 50);
@@ -84,13 +92,18 @@ task main(){
 		turnToAngle(drive, gyr, 90, 50);
 	}
 
-		driveToEncodeVal(drive, 1500, 32, 50);
+		driveToEncodeVal(drive, 1510, 100, 100);
 	writeDebugStreamLine("started 13");
 	if(HTIRS2readDCDir(HiTeIR) == 5){
 		turnToAngle(drive, gyr, -90, 50);
 		wait1Msec(500);
 		turnToAngle(drive, gyr, 90, 50);
 	}
+	turnToAngle(drive, gyr, -13, 100);
+	driveToEncodeVal(drive, 3353, 100, 100);
+	turnToAngle(drive, gyr, -37, 100);
+	driveToEncodeVal(drive, 4695, 100, 100);
+	turnToAngle(drive, gyr, -38, 100);
 	return;
 	//driveToEncodeVal(drive, 10000, 50);
 	/*PlayTone(3500, 500);
@@ -193,13 +206,23 @@ void turnToAngle(DriveSys t, gyroSys g, float relHeading, int turnRate){
 }
 
 void driveToEncodeVal(DriveSys t, long targetVal, int leftMotorPower, int rightMotorPower){
-	long long int initVal = nMotorEncoder[t.Right];
+	nMotorEncoder[t.Right] = 0;
+
+	writeDebugStreamLine("target: %d", targetVal);
+	writeDebugStreamLine("left motor: %d", leftMotorPower);
 	motor[t.Right] = rightMotorPower;
+	wait1Msec(100);
+	writeDebugStreamLine("right motor: %d", motor[t.Right]);
 	motor[t.Left] = leftMotorPower;
 
-	while(abs(nMotorEncoder[t.Right]) < abs(initVal + targetVal)){
+	int iter = 0;
+	while(abs(nMotorEncoder[t.Right]) < abs(targetVal)){
 		nxtDisplayCenteredBigTextLine(0, "Enc %d", nMotorEncoder[t.Right]);
+		iter++;
+		writeDebugStreamLine("iters: %d", iter);
 	};
+
+	//writeDebugStreamLine()
 
 	motor[t.Right] = 0;
 	motor[t.Left] = 0;
