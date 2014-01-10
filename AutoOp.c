@@ -51,18 +51,19 @@ void initializeRobot()
 }
 
 task main(){
-	driveToEncodeVal(drive, 1000, 100, 100);
-	writeDebugStreamLine("yolo");
-	return;
-	writeDebugStreamLine("started");
 	initializeRobot();
+	writeDebugStreamLine("started");
 	writeDebugStreamLine("started 2");
 	#ifdef COMPETITION
 	waitForStart();   // wait for start of auto-op phase
 	#endif
+
+	driveToEncodeVal(drive, 4500, 100, 100);
+	turnToAngle(drive, gyr, 25, 100);
+	driveToEncodeVal(drive, 3500, 100, 100);
 	//turnToAngle(drive, gyr, 360, 50);
-		writeDebugStreamLine("started 20");
-	driveToEncodeVal(drive, 2185, 100, 100);
+	/*	writeDebugStreamLine("started 20");
+	driveToEncodeVal(drive, 1600, 100, 100);
 		writeDebugStreamLine("started 21");
 	turnToAngle(drive, gyr, 45, 100);
 		writeDebugStreamLine("started 22");
@@ -105,6 +106,7 @@ task main(){
 	driveToEncodeVal(drive, 4695, 100, 100);
 	turnToAngle(drive, gyr, -38, 100);
 	return;
+	*/
 	//driveToEncodeVal(drive, 10000, 50);
 	/*PlayTone(3500, 500);
 	while(bSoundActive);
@@ -208,18 +210,11 @@ void turnToAngle(DriveSys t, gyroSys g, float relHeading, int turnRate){
 void driveToEncodeVal(DriveSys t, long targetVal, int leftMotorPower, int rightMotorPower){
 	nMotorEncoder[t.Right] = 0;
 
-	writeDebugStreamLine("target: %d", targetVal);
-	writeDebugStreamLine("left motor: %d", leftMotorPower);
 	motor[t.Right] = rightMotorPower;
-	wait1Msec(100);
-	writeDebugStreamLine("right motor: %d", motor[t.Right]);
 	motor[t.Left] = leftMotorPower;
 
-	int iter = 0;
 	while(abs(nMotorEncoder[t.Right]) < abs(targetVal)){
 		nxtDisplayCenteredBigTextLine(0, "Enc %d", nMotorEncoder[t.Right]);
-		iter++;
-		writeDebugStreamLine("iters: %d", iter);
 	};
 
 	//writeDebugStreamLine()
