@@ -1,7 +1,15 @@
 #ifndef HANGSYS_C
 #define HANGSYS_C
 
+task autoHangAudibleNotif(){
+	for(int i = 0; i < 20; i++){
+		PlayTone(4000, 10);
+		PlayTone(3000, 10);
+	}
+}
+
 task autoHangerDeploy(){
+	StartTask(autoHangAudibleNotif);
 	writeDebugStreamLine("started");
 	hang.autoActive = true;
 

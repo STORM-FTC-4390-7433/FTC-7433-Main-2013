@@ -32,6 +32,7 @@ ConvSys conv;
 void turnToAngle(DriveSys t, gyroSys g, float relHeading, int turnRate);
 void driveToEncodeVal(DriveSys t, long targetVal, int leftMotorPower, int rightMotorPower);
 void placeBlockOnIr(DriveSys t, gyroSys g, ConvSys s, bool isRightPath, tSensors IR);
+task music();
 
 void initializeRobot()
 {
@@ -77,15 +78,17 @@ task main(){
 	waitForStart();   // wait for start of auto-op phase
 	#endif
 
+	StartTask(music);
 	if(!rightPath){
-		driveToEncodeVal(drive, 4500, 100, 100);
-		turnToAngle(drive, gyr, 25, 100);
-		driveToEncodeVal(drive, 3500, 100, 100);
+		driveToEncodeVal(drive, -10000, -100, -100);
+		//turnToAngle(drive, gyr, 5, 100);
+		//driveToEncodeVal(drive, 4000, 100, 100);
 	} else {
-		driveToEncodeVal(drive, 4500, 100, 100);
-		turnToAngle(drive, gyr, -25, 100);
-		driveToEncodeVal(drive, 3500, 100, 100);
+		driveToEncodeVal(drive, -10000, -100, -100);
+		//turnToAngle(drive, gyr, -5, 100);
+		//driveToEncodeVal(drive, 4000, 100, 100);
 	}
+	wait1Msec(20000);
 	//turnToAngle(drive, gyr, 360, 50);
 	/*	writeDebugStreamLine("started 20");
 	driveToEncodeVal(drive, 1600, 100, 100);
@@ -207,7 +210,8 @@ task main(){
 }
 
 void turnToAngle(DriveSys t, gyroSys g, float relHeading, int turnRate){
-	float targetHeading = g.rotationsHeading + relHeading;
+	g.rotationsHeading = 0;
+	float targetHeading = relHeading;
 	writeDebugStreamLine("rotatHeading: %d", g.rotationsHeading);
 	writeDebugStreamLine("relHerelHeading: %d", relHeading);
 	writeDebugStreamLine("targetHeading: %d", targetHeading);
@@ -264,4 +268,68 @@ void placeBlockOnIr(DriveSys t, gyroSys g, ConvSys s, bool isRightPath, tSensors
 			turnToAngle(t, g, 90.0, 50);
 		}
 	}
+}
+task music(){
+	PlayTone(  880,    7); wait1Msec(  75);  // Note(D, Duration(32th))
+  PlayTone(  933,    7); wait1Msec(  75);  // Note(D#, Duration(32th))
+  PlayTone(  880,    7); wait1Msec(  75);  // Note(D, Duration(32th))
+  PlayTone(  933,    7); wait1Msec(  75);  // Note(D#, Duration(32th))
+  PlayTone(  880,    7); wait1Msec(  75);  // Note(D, Duration(32th))
+  PlayTone(  933,    7); wait1Msec(  75);  // Note(D#, Duration(32th))
+  PlayTone(  880,    7); wait1Msec(  75);  // Note(D, Duration(32th))
+  PlayTone(  933,    7); wait1Msec(  75);  // Note(D#, Duration(32th))
+  PlayTone(  880,    7); wait1Msec(  75);  // Note(D, Duration(32th))
+  PlayTone(  880,    7); wait1Msec(  75);  // Note(D, Duration(32th))
+  PlayTone(  933,    7); wait1Msec(  75);  // Note(D#, Duration(32th))
+  PlayTone(  988,    7); wait1Msec(  75);  // Note(E, Duration(32th))
+  PlayTone( 1047,    7); wait1Msec(  75);  // Note(F, Duration(32th))
+  PlayTone( 1109,    7); wait1Msec(  75);  // Note(F#, Duration(32th))
+  PlayTone( 1175,    7); wait1Msec(  75);  // Note(G, Duration(32th))
+  PlayTone( 1175,   14); wait1Msec( 150);  // Note(G, Duration(16th))
+  PlayTone(    0,   27); wait1Msec( 300);  // Note(Rest, Duration(Eighth))
+  PlayTone( 1175,   14); wait1Msec( 150);  // Note(G, Duration(16th))
+  PlayTone(    0,   27); wait1Msec( 300);  // Note(Rest, Duration(Eighth))
+  PlayTone( 1398,   14); wait1Msec( 150);  // Note(A#, Duration(16th))
+  PlayTone(    0,   14); wait1Msec( 150);  // Note(Rest, Duration(16th))
+  PlayTone(  784,   14); wait1Msec( 150);  // Note(C, Duration(16th))
+  PlayTone(    0,   14); wait1Msec( 150);  // Note(Rest, Duration(16th))
+  PlayTone( 1175,   14); wait1Msec( 150);  // Note(G, Duration(16th))
+  PlayTone(    0,   27); wait1Msec( 300);  // Note(Rest, Duration(Eighth))
+  PlayTone( 1175,   14); wait1Msec( 150);  // Note(G, Duration(16th))
+  PlayTone(    0,   27); wait1Msec( 300);  // Note(Rest, Duration(Eighth))
+  PlayTone( 1047,   14); wait1Msec( 150);  // Note(F, Duration(16th))
+  PlayTone(    0,   14); wait1Msec( 150);  // Note(Rest, Duration(16th))
+  PlayTone( 1109,   14); wait1Msec( 150);  // Note(F#, Duration(16th))
+  PlayTone(    0,   14); wait1Msec( 150);  // Note(Rest, Duration(16th))
+  PlayTone( 1175,   14); wait1Msec( 150);  // Note(G, Duration(16th))
+  PlayTone(    0,   27); wait1Msec( 300);  // Note(Rest, Duration(Eighth))
+  PlayTone( 1175,   14); wait1Msec( 150);  // Note(G, Duration(16th))
+  PlayTone(    0,   27); wait1Msec( 300);  // Note(Rest, Duration(Eighth))
+  PlayTone( 1398,   14); wait1Msec( 150);  // Note(A#, Duration(16th))
+  PlayTone(    0,   14); wait1Msec( 150);  // Note(Rest, Duration(16th))
+  PlayTone(  784,   14); wait1Msec( 150);  // Note(C, Duration(16th))
+  PlayTone(    0,   14); wait1Msec( 150);  // Note(Rest, Duration(16th))
+  PlayTone( 1175,   14); wait1Msec( 150);  // Note(G, Duration(16th))
+  PlayTone(    0,   27); wait1Msec( 300);  // Note(Rest, Duration(Eighth))
+  PlayTone( 1175,   14); wait1Msec( 150);  // Note(G, Duration(16th))
+  PlayTone(    0,   27); wait1Msec( 300);  // Note(Rest, Duration(Eighth))
+  PlayTone( 1047,   14); wait1Msec( 150);  // Note(F, Duration(16th))
+  PlayTone(    0,   14); wait1Msec( 150);  // Note(Rest, Duration(16th))
+  PlayTone( 1109,   14); wait1Msec( 150);  // Note(F#, Duration(16th))
+  PlayTone(    0,   14); wait1Msec( 150);  // Note(Rest, Duration(16th))
+  PlayTone( 1398,   14); wait1Msec( 150);  // Note(A#, Duration(16th))
+  PlayTone( 1175,   14); wait1Msec( 150);  // Note(G, Duration(16th))
+  PlayTone(  880,  108); wait1Msec(1200);  // Note(D, Duration(Half))
+  PlayTone(    0,    7); wait1Msec(  75);  // Note(Rest, Duration(32th))
+  PlayTone( 1398,   14); wait1Msec( 150);  // Note(A#, Duration(16th))
+  PlayTone( 1175,   14); wait1Msec( 150);  // Note(G, Duration(16th))
+  PlayTone(  831,  108); wait1Msec(1200);  // Note(C#, Duration(Half))
+  PlayTone(    0,    7); wait1Msec(  75);  // Note(Rest, Duration(32th))
+  PlayTone( 1398,   14); wait1Msec( 150);  // Note(A#, Duration(16th))
+  PlayTone( 1175,   14); wait1Msec( 150);  // Note(G, Duration(16th))
+  PlayTone(  784,  108); wait1Msec(1200);  // Note(C, Duration(Half))
+  PlayTone(    0,   14); wait1Msec( 150);  // Note(Rest, Duration(16th))
+  PlayTone(  932,   14); wait1Msec( 150);  // Note(A#5, Duration(16th))
+  PlayTone(  784,   14); wait1Msec( 150);  // Note(C, Duration(16th))
+
 }

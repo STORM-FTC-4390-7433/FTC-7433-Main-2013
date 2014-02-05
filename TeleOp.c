@@ -83,7 +83,7 @@ task main(){
 		if(joy1Btn(10)){
 			updateDriveSys(drive, joystick.joy1_y1 * (100.0/128.0), joystick.joy1_y1 * (100.0/128.0));
 		} else if(joy1Btn(9)){
-			updateDriveSys(drive, -joystick.joy1_y1 * (100.0/128.0), joystick.joy1_y1 * (100.0/128.0));
+			updateDriveSys(drive, -joystick.joy1_y2 * (100.0/128.0), joystick.joy1_y2 * (100.0/128.0));
 		} else {
 			updateDriveSys(drive, joystick.joy1_y1 * (100.0/128.0), joystick.joy1_y2 * (100.0/128.0));
 		}
